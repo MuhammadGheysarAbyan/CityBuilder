@@ -1,151 +1,89 @@
-# 🏙️ 3D City Builder Game
+# 🏙️ 3D City Builder Game — AntiGravity Edition
 
-A web-based 3D city building simulation game built with **Three.js** and modern web technologies.
+A premium web-based 3D city building simulation game built with **Three.js**. Experience detailed procedural buildings, real-time economy simulation, and beautiful glassmorphism UI.
 
-## 🎮 Features
+![City Builder](https://raw.githubusercontent.com/antigravity-team/city-builder-3d/main/preview.png)
 
-- **3D Isometric View** with smooth camera controls
-- **Grid-Based Building System** with smart placement validation
-- **Real-Time Simulation** for citizens, economy, and resources
-- **Multiple Building Types**: Residential, Commercial, Industrial, Utilities, Services
-- **Resource Management**: Power, Water, Waste
-- **Economy System**: Income from taxes, maintenance costs
-- **Population Growth** based on happiness and employment
-- **Modern UI** with intuitive controls
+## ✨ New Features
+
+- **Standard Material Rendering**: Rich lighting with sun, ambient, and fill lights + fog for depth.
+- **Procedural 3D Models**: Unique geometries for every building type:
+  - 🏠 **Residential**: Modern houses with garages and porches.
+  - 🏢 **Commercial**: Skyscrapers with antenna and roof details.
+  - 🏭 **Industrial**: Factories with smokestacks and sawtooth roofs.
+  - ⚡ **Power Plant**: Nuclear style with cooling towers.
+  - 🏥 **Hospital**: Complex wing structure with cross.
+- **Smart Placement System**: 
+  - Preview shows *exact* building shape before placing.
+  - **Continuous placement** (hold shift or just click multiple times).
+  - Toast notifications for feedback (e.g., "❌ Needs road access").
+- **Glassmorphism UI**: Modern aesthetic with blur effects, smooth animations, and Inter font.
+- **Toast Notifications**: Non-blocking alerts for gameplay feedback.
 
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
-# Clone or extract the project
+# 1. Enter the project directory
 cd city-builder-3d
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Start development server
+# 3. Start development server
 npm run dev
 ```
 
-The game will open automatically in your browser at `http://localhost:3000`
+The game will open automatically at `http://localhost:3000`
 
-### Build for Production
+## 🎮 Controls
 
-```bash
-npm run build
-npm run preview
-```
+### Camera
+| Action | Control |
+|--------|---------|
+| **Rotate** | Left Click + Drag |
+| **Pan** | Right Click + Drag |
+| **Zoom** | Scroll Wheel |
 
-## 🎯 How to Play
+### Building
+1. Select a category (Zones, Roads, Utilities, Services).
+2. Click a building card.
+3. Move mouse to grid — **Green** means valid, **Red** means invalid.
+4. **Left Click** to build.
+5. **Right Click** or press Cancel button to stop building.
 
-1. **Camera Controls**:
-   - **Left Click + Drag**: Rotate view
-   - **Right Click + Drag**: Pan
-   - **Scroll**: Zoom in/out
-
-2. **Building**:
-   - Select a building from the bottom menu
-   - Click on the grid to place (green = valid, red = invalid)
-   - Right-click to cancel placement
-   - Buildings need road access (except roads)
-
-3. **Time Controls** (top-right):
-   - ⏸️ Pause
-   - ▶️ Normal speed
-   - ⏩ Fast forward (3x)
-
-4. **Information**:
-   - Click on any building to see details
-   - Monitor your money, population, and resources in the top HUD
+### Economy
+- **Money**: Earned tax from Population/Jobs. Spent on construction & maintenance.
+- **Population**: Grows when Happiness is high and jobs are available.
+- **Resources**: Manage **Power** ⚡ and **Water** 💧 capacity.
 
 ## 🏗️ Building Types
 
 ### Zones
-- **🏘️ Residential** ($100) - Houses citizens
-- **🏢 Commercial** ($200) - Provides jobs, generates income
-- **🏭 Industrial** ($150) - Provides jobs, production
+- **Residential** ($100): Houses citizens. Needs road access.
+- **Commercial** ($200): Provides jobs & tax. Needs road access.
+- **Industrial** ($150): High employment, high pollution. Needs road access.
 
 ### Infrastructure
-- **🛣️ Road** ($10) - Required for buildings
-- **⚡ Power Plant** ($500) - Provides electricity
-- **💧 Water Tower** ($300) - Provides water
-- **🗑️ Waste Facility** ($400) - Manages garbage
+- **Road** ($10): Basic connectivity.
+- **Avenue** ($20): Wider road with median trees.
+- **Power Plant** ($500): Generates 200 Power.
+- **Water Tower** ($300): Provides 150 Water.
+- **Waste Facility** ($400): Manages city waste.
 
 ### Services
-- **🚓 Police Station** ($250) - Reduces crime
-- **🏥 Hospital** ($300) - Improves health
-- **🏫 School** ($200) - Improves education
+- **Police Station**: Reduces crime, boosts happiness.
+- **Hospital**: Improves health coverage.
+- **School**: Increases education level.
 
-## 📁 Project Structure
+## 🛠️ Tech Stack
 
-```
-city-builder-3d/
-├── src/
-│   ├── core/           # Engine, Scene, Input, Time
-│   ├── world/          # Grid, WorldManager
-│   ├── buildings/      # BuildingManager, Placement
-│   ├── simulation/     # Citizens, Economy
-│   ├── ui/             # UIManager
-│   ├── data/           # GameState, Constants
-│   ├── utils/          # Utilities
-│   └── styles/         # CSS
-├── index.html
-├── package.json
-└── vite.config.js
-```
+- **Three.js**: 3D Rendering Engine
+- **Vite**: Ultra-fast build tool
+- **Vanilla JS**: ES6+ modules for core logic
+- **CSS3**: Variables, Flexbox, Grid, Backdrop Filter
 
-## ⚙️ Technical Details
+## 📝 Credits
 
-- **Engine**: Three.js for 3D rendering
-- **Architecture**: Dual-loop (60 FPS render + 2 TPS simulation)
-- **Optimization**: InstancedMesh for buildings, LOD ready
-- **Performance**: Handles 1000+ buildings smoothly
-
-## 🎨 Customization
-
-### Add New Building Types
-
-Edit `src/buildings/BuildingData.js`:
-
-```javascript
-my_building: {
-  width: 1,
-  depth: 1,
-  height: 10,
-  cost: 300,
-  maintenance: 20,
-  requiresRoad: true
-}
-```
-
-Add color in `src/data/Constants.js`
-
-## 📝 Development Roadmap
-
-- [x] Core engine & rendering
-- [x] Grid system & building placement
-- [x] Basic simulation (citizens, economy)
-- [x] UI/UX
-- [ ] Advanced traffic simulation
-- [ ] Disasters & events
-- [ ] Save/Load system
-- [ ] Advanced graphics (particles, effects)
-- [ ] Sound effects & music
-- [ ] Multiplayer (future)
-
-## 🐛 Known Issues
-
-- Building demolition doesn't refund money (feature, not bug!)
-- No pathfinding for traffic yet
-- Limited terrain variation
-
-## 📄 License
-
-MIT License - Feel free to modify and use!
-
-## 👨‍💻 Created By
-
-**AntiGravity Developer Team**
-
-Built with ❤️ using Three.js
+Created by **AntiGravity Developer Team** with ❤️
