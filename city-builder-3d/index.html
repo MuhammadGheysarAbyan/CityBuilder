@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D City Builder | AntiGravity</title>
+  <meta name="description" content="Build your dream city in 3D! A web-based city simulation game with realistic buildings and economy.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+</head>
+<body>
+  <!-- Canvas for Three.js -->
+  <canvas id="canvas"></canvas>
+
+  <!-- HUD (Top Stats) -->
+  <div id="hud">
+    <div class="hud-top">
+      <div class="stat" id="stat-money">
+        <span class="stat-icon">💰</span>
+        <div class="stat-info">
+          <span class="stat-label">Money</span>
+          <span class="stat-value" id="money">$50,000</span>
+        </div>
+      </div>
+      <div class="stat" id="stat-pop">
+        <span class="stat-icon">👥</span>
+        <div class="stat-info">
+          <span class="stat-label">Population</span>
+          <span class="stat-value" id="population">0</span>
+        </div>
+      </div>
+      <div class="stat" id="stat-happy">
+        <span class="stat-icon">😊</span>
+        <div class="stat-info">
+          <span class="stat-label">Happiness</span>
+          <span class="stat-value" id="happiness">100%</span>
+        </div>
+      </div>
+      <div class="stat" id="stat-power">
+        <span class="stat-icon">⚡</span>
+        <div class="stat-info">
+          <span class="stat-label">Power</span>
+          <span class="stat-value" id="power">0/0</span>
+        </div>
+      </div>
+      <div class="stat" id="stat-water">
+        <span class="stat-icon">💧</span>
+        <div class="stat-info">
+          <span class="stat-label">Water</span>
+          <span class="stat-value" id="water">0/0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Controls -->
+  <div class="time-controls">
+    <button id="pause" title="Pause">⏸️</button>
+    <button id="play" class="active" title="Play">▶️</button>
+    <button id="fast" title="Fast Forward">⏩</button>
+    <div class="speed-indicator">Speed: <span id="speed">1x</span></div>
+  </div>
+
+  <!-- Build Menu -->
+  <div id="build-menu">
+    <div class="menu-tabs">
+      <button class="tab active" data-category="zones">🏘️ Zones</button>
+      <button class="tab" data-category="roads">🛣️ Roads</button>
+      <button class="tab" data-category="utilities">⚡ Utilities</button>
+      <button class="tab" data-category="services">🏥 Services</button>
+    </div>
+
+    <div class="menu-content">
+      <!-- Zones Category -->
+      <div class="category active" id="zones">
+        <div class="building-card" data-type="residential">
+          <div class="card-icon">🏘️</div>
+          <div class="card-name">Residential</div>
+          <div class="card-cost">$100</div>
+        </div>
+        <div class="building-card" data-type="commercial">
+          <div class="card-icon">🏢</div>
+          <div class="card-name">Commercial</div>
+          <div class="card-cost">$200</div>
+        </div>
+        <div class="building-card" data-type="industrial">
+          <div class="card-icon">🏭</div>
+          <div class="card-name">Industrial</div>
+          <div class="card-cost">$150</div>
+        </div>
+      </div>
+
+      <!-- Roads Category -->
+      <div class="category" id="roads">
+        <div class="building-card" data-type="road">
+          <div class="card-icon">🛣️</div>
+          <div class="card-name">Road</div>
+          <div class="card-cost">$10</div>
+        </div>
+        <div class="building-card" data-type="avenue">
+          <div class="card-icon">🛤️</div>
+          <div class="card-name">Avenue</div>
+          <div class="card-cost">$20</div>
+        </div>
+      </div>
+
+      <!-- Utilities Category -->
+      <div class="category" id="utilities">
+        <div class="building-card" data-type="power_plant">
+          <div class="card-icon">⚡</div>
+          <div class="card-name">Power Plant</div>
+          <div class="card-cost">$500</div>
+        </div>
+        <div class="building-card" data-type="water_tower">
+          <div class="card-icon">💧</div>
+          <div class="card-name">Water Tower</div>
+          <div class="card-cost">$300</div>
+        </div>
+        <div class="building-card" data-type="waste">
+          <div class="card-icon">🗑️</div>
+          <div class="card-name">Waste Facility</div>
+          <div class="card-cost">$400</div>
+        </div>
+      </div>
+
+      <!-- Services Category -->
+      <div class="category" id="services">
+        <div class="building-card" data-type="police">
+          <div class="card-icon">🚓</div>
+          <div class="card-name">Police Station</div>
+          <div class="card-cost">$250</div>
+        </div>
+        <div class="building-card" data-type="hospital">
+          <div class="card-icon">🏥</div>
+          <div class="card-name">Hospital</div>
+          <div class="card-cost">$300</div>
+        </div>
+        <div class="building-card" data-type="school">
+          <div class="card-icon">🏫</div>
+          <div class="card-name">School</div>
+          <div class="card-cost">$200</div>
+        </div>
+      </div>
+    </div>
+
+    <button id="cancel-build" class="cancel-btn" style="display: none;">❌ Cancel Build</button>
+  </div>
+
+  <!-- Overlay Controls -->
+  <div id="overlay-controls">
+    <button data-overlay="none" class="active">👁️ Normal</button>
+    <button data-overlay="zones">🏘️ Zones</button>
+    <button data-overlay="traffic">🚦 Traffic</button>
+    <button data-overlay="power">⚡ Power</button>
+    <button data-overlay="water">💧 Water</button>
+    <button data-overlay="happiness">😊 Happy</button>
+  </div>
+
+  <!-- Info Panel -->
+  <div id="info-panel" style="display: none;">
+    <h3 id="info-title">Building Info</h3>
+    <div id="info-content"></div>
+    <button id="demolish-btn">🔨 Demolish ($50 refund)</button>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loading-content">
+      <div class="loading-icon">🏙️</div>
+      <h1>City Builder 3D</h1>
+      <div class="loading-bar">
+        <div class="loading-progress"></div>
+      </div>
+      <p class="loading-text">Generating city terrain...</p>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
