@@ -16,51 +16,52 @@ import { GameState } from '../data/GameState.js';
 export class Engine {
   constructor(canvas) {
     this.canvas = canvas;
-    
+
     // Initialize core systems
     this.gameState = new GameState();
     this.sceneManager = new SceneManager(canvas);
     this.inputManager = new InputManager(canvas, this.sceneManager.camera);
     this.timeManager = new TimeManager();
-    
+
     // Initialize world
     this.worldManager = new WorldManager(this.sceneManager.scene, this.gameState);
-    
+
     // Initialize building system
     this.buildingManager = new BuildingManager(
       this.sceneManager.scene,
       this.worldManager.grid,
       this.gameState
     );
-    
+
     this.placementSystem = new PlacementSystem(
       this.worldManager.grid,
       this.buildingManager,
       this.sceneManager.scene,
       this.gameState
     );
-    
+
     // Initialize simulation
     this.simulationManager = new SimulationManager(
       this.gameState,
       this.worldManager,
       this.buildingManager
     );
-    
+
     // Initialize UI
     this.uiManager = new UIManager(
       this.gameState,
       this.timeManager,
       this.placementSystem,
       this.buildingManager,
-      this.worldManager
+      this.worldManager,
+      this.sceneManager
     );
-    
+
     // Game loop state
     this.lastTime = performance.now();
     this.simulationAccumulator = 0;
     this.isRunning = false;
-    
+
     // Connect systems
     this.connectSystems();
   }
@@ -100,7 +101,7 @@ export class Engine {
   handleBuildingClick(data) {
     const gridPos = this.worldManager.grid.worldToGrid(data.point.x, data.point.z);
     const tile = this.worldManager.grid.getTile(gridPos.x, gridPos.z);
-    
+
     if (tile && tile.building) {
       this.uiManager.showBuildingInfo(tile.building);
     } else {
@@ -130,7 +131,7 @@ export class Engine {
 
     // SIMULATION TICK (fixed timestep based on time speed)
     this.simulationAccumulator += deltaTime * this.timeManager.timeScale;
-    
+
     while (this.simulationAccumulator >= this.timeManager.TICK_INTERVAL) {
       if (!this.timeManager.isPaused) {
         this.simulationTick(this.timeManager.TICK_INTERVAL / 1000);
@@ -152,13 +153,16 @@ export class Engine {
   renderFrame(dt) {
     // Update input
     this.inputManager.update();
-    
-    // Update scene
+
+    // Update scene (includes day/night cycle)
     this.sceneManager.update(dt);
-    
+
+    // Update world (animated trees, lamps, water)
+    this.worldManager.update(dt);
+
     // Update UI
     this.uiManager.update(dt);
-    
+
     // Render scene
     this.sceneManager.render();
   }

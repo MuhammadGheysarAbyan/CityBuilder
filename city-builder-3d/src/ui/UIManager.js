@@ -1,13 +1,14 @@
 import { EventEmitter } from '../utils/EventEmitter.js';
 
 export class UIManager extends EventEmitter {
-  constructor(gameState, timeManager, placementSystem, buildingManager, worldManager) {
+  constructor(gameState, timeManager, placementSystem, buildingManager, worldManager, sceneManager) {
     super();
     this.gameState = gameState;
     this.timeManager = timeManager;
     this.placementSystem = placementSystem;
     this.buildingManager = buildingManager;
     this.worldManager = worldManager;
+    this.sceneManager = sceneManager;
     this.selectedBuilding = null;
 
     this.setupEventListeners();
@@ -182,6 +183,15 @@ export class UIManager extends EventEmitter {
       moneyEl.style.color = '#ffd93d';
     } else {
       moneyEl.style.color = '';
+    }
+
+    // Update day/night indicator
+    if (this.sceneManager) {
+      const dayInfo = this.sceneManager.getDayTimeInfo();
+      const timeEl = document.getElementById('game-time');
+      const iconEl = document.getElementById('day-night-icon');
+      if (timeEl) timeEl.textContent = dayInfo.timeString;
+      if (iconEl) iconEl.textContent = dayInfo.isDay ? '☀️' : '🌙';
     }
   }
 }

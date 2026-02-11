@@ -33,31 +33,52 @@ export class Grid {
   createGridMesh() {
     const totalW = this.width * this.tileSize;
     const totalH = this.height * this.tileSize;
-    const geometry = new THREE.PlaneGeometry(totalW, totalH, this.width * 2, this.height * 2);
+    const segW = this.width * 2;
+    const segH = this.height * 2;
+    const geometry = new THREE.PlaneGeometry(totalW, totalH, segW, segH);
     geometry.rotateX(-Math.PI / 2);
 
-    const colors = new Float32Array(geometry.attributes.position.count * 3);
     const positions = geometry.attributes.position.array;
+    const colors = new Float32Array(geometry.attributes.position.count * 3);
 
+    // Add subtle terrain height variation (gentle rolling hills)
+    for (let i = 0; i < positions.length; i += 3) {
+      const px = positions[i];
+      const pz = positions[i + 2];
+
+      // Multi-frequency terrain variation
+      const h1 = Math.sin(px * 0.04) * Math.cos(pz * 0.04) * 0.4;
+      const h2 = Math.sin(px * 0.08 + 1.5) * Math.cos(pz * 0.06 + 0.7) * 0.2;
+      const h3 = Math.sin(px * 0.15 + 3.0) * Math.cos(pz * 0.12 + 2.0) * 0.08;
+      positions[i + 1] += h1 + h2 + h3;
+    }
+    geometry.computeVertexNormals();
+
+    // Rich, natural-looking grass with more variation
     for (let i = 0; i < colors.length; i += 3) {
       const vIdx = i / 3;
       const px = positions[vIdx * 3];
       const pz = positions[vIdx * 3 + 2];
 
-      // Create natural-looking grass with Perlin-like variation
-      const dist = Math.sqrt(px * px + pz * pz) * 0.02;
-      const wave = Math.sin(px * 0.15) * Math.cos(pz * 0.15) * 0.06;
-      const variation = wave + Math.sin(dist * 3.0) * 0.04;
+      // Position-based variation for patches look
+      const dist = Math.sqrt(px * px + pz * pz) * 0.015;
+      const wave = Math.sin(px * 0.12) * Math.cos(pz * 0.12) * 0.08;
+      const patch = Math.sin(px * 0.3 + pz * 0.3) * 0.03;
+      const noise = (Math.random() - 0.5) * 0.04;
+      const variation = wave + patch + Math.sin(dist * 3.0) * 0.04 + noise;
 
-      colors[i]     = 0.28 + variation;             // R - warm green
-      colors[i + 1] = 0.55 + variation + 0.05;      // G - rich green
-      colors[i + 2] = 0.18 + variation * 0.5;       // B - earthy
+      const brightness = 0.85 + Math.sin(dist * 5) * 0.1;
+
+      colors[i] = (0.26 + variation) * brightness;       // R
+      colors[i + 1] = (0.56 + variation + 0.06) * brightness; // G
+      colors[i + 2] = (0.16 + variation * 0.4) * brightness;  // B
     }
 
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
     const material = new THREE.MeshStandardMaterial({
       vertexColors: true,
-      roughness: 0.9,
+      roughness: 0.88,
       metalness: 0.0
     });
 

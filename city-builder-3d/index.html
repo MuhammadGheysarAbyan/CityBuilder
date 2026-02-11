@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D City Builder | AntiGravity</title>
-  <meta name="description" content="Build your dream city in 3D! A web-based city simulation game with realistic buildings and economy.">
+  <title>🏙️ City Builder 3D | Premium Edition</title>
+  <meta name="description"
+    content="Build your dream city in stunning 3D! A web-based city simulation with realistic buildings, day/night cycle, and dynamic economy.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="/src/styles/main.css">
 </head>
+
 <body>
   <!-- Canvas for Three.js -->
   <canvas id="canvas"></canvas>
@@ -17,39 +22,48 @@
   <!-- HUD (Top Stats) -->
   <div id="hud">
     <div class="hud-top">
-      <div class="stat" id="stat-money">
+      <div class="stat stat-glow" id="stat-money">
         <span class="stat-icon">💰</span>
         <div class="stat-info">
           <span class="stat-label">Money</span>
           <span class="stat-value" id="money">$50,000</span>
         </div>
       </div>
-      <div class="stat" id="stat-pop">
+      <div class="stat stat-glow" id="stat-pop">
         <span class="stat-icon">👥</span>
         <div class="stat-info">
           <span class="stat-label">Population</span>
           <span class="stat-value" id="population">0</span>
         </div>
       </div>
-      <div class="stat" id="stat-happy">
+      <div class="stat stat-glow" id="stat-happy">
         <span class="stat-icon">😊</span>
         <div class="stat-info">
           <span class="stat-label">Happiness</span>
           <span class="stat-value" id="happiness">100%</span>
         </div>
       </div>
-      <div class="stat" id="stat-power">
+      <div class="stat stat-glow" id="stat-power">
         <span class="stat-icon">⚡</span>
         <div class="stat-info">
           <span class="stat-label">Power</span>
           <span class="stat-value" id="power">0/0</span>
         </div>
       </div>
-      <div class="stat" id="stat-water">
+      <div class="stat stat-glow" id="stat-water">
         <span class="stat-icon">💧</span>
         <div class="stat-info">
           <span class="stat-label">Water</span>
           <span class="stat-value" id="water">0/0</span>
+        </div>
+      </div>
+
+      <!-- Day/Night Cycle Indicator -->
+      <div class="stat stat-time">
+        <span class="stat-icon" id="day-night-icon">☀️</span>
+        <div class="stat-info">
+          <span class="stat-label">Time</span>
+          <span class="stat-value stat-time-value" id="game-time">08:24</span>
         </div>
       </div>
     </div>
@@ -172,7 +186,8 @@
   <div id="loading-screen">
     <div class="loading-content">
       <div class="loading-icon">🏙️</div>
-      <h1>City Builder 3D</h1>
+      <h1 class="loading-title">CITY BUILDER</h1>
+      <p class="loading-subtitle">3D PREMIUM EDITION</p>
       <div class="loading-bar">
         <div class="loading-progress"></div>
       </div>
@@ -182,4 +197,5 @@
 
   <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>
